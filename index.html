@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Forgotten Temple Adventure</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #game-container {
+            border: 2px solid #00ff00;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #003300;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #006600;
+        }
+        #story-text {
+            margin-bottom: 20px;
+            min-height: 100px;
+        }
+        #image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>The Forgotten Temple</h1>
+        <div id="image-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Angkor_Wat.jpg/800px-Angkor_Wat.jpg" width="600" alt="Ancient Temple">
+        </div>
+        <div id="story-text"></div>
+        <div id="choices"></div>
+    </div>
+
+    <script>
+        const gameData = {
+            currentScene: 'start',
+            scenes: {
+                start: {
+                    text: "You wake up in an ancient temple courtyard. The stone walls are covered in strange carvings. To your left, a dark corridor. To your right, a staircase leading up.",
+                    choices: [
+                        { text: "Enter the dark corridor", next: "corridor" },
+                        { text: "Climb the staircase", next: "staircase" }
+                    ]
+                },
+                corridor: {
+                    text: "The air grows colder as you walk. You find a rusty dagger and a torch. Which do you take?",
+                    choices: [
+                        { text: "Take the dagger", next: "dagger" },
+                        { text: "Take the torch", next: "torch" }
+                    ]
+                },
+                dagger: {
+                    text: "As you grab the dagger, a hidden trap triggers! Poison darts shoot from the walls...",
+                    choices: [
+                        { text: "Try to dodge", next: "death" },
+                        { text: "Use the dagger to block", next: "block" }
+                    ]
+                },
+                torch: {
+                    text: "The torch reveals hidden symbols on the walls. They show a map of the temple...",
+                    choices: [
+                        { text: "Follow the map", next: "treasure" },
+                        { text: "Ignore it", next: "staircase" }
+                    ]
+                },
+                treasure: {
+                    text: "You find a hidden chamber filled with golden artifacts!",
+                    choices: [
+                        { text: "Take the treasure", next: "win" },
+                        { text: "Leave it", next: "escape" }
+                    ]
+                },
+                death: {
+                    text: "The poison takes effect... Everything fades to black.",
+                    choices: [
+                        { text: "Restart", next: "start" }
+                    ]
+                }
+            }
+        };
+
+        function updateGame() {
+            const scene = gameData.scenes[gameData.currentScene];
+            document.getElementById('story-text').innerHTML = scene.text;
+            
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+            
+            scene.choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.innerHTML = choice.text;
+                button.onclick = () => {
+                    gameData.currentScene = choice.next;
+                    updateGame();
+                };
+                choicesDiv.appendChild(button);
+            });
+        }
+
+        // Start the game
+        updateGame();
+    </script>
+</body>
+</html>
